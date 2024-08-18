@@ -1,53 +1,77 @@
-const wheel1 = document.getElementById('wheel1');
-const wheel2 = document.getElementById('wheel2');
-const result = document.getElementById('result');
-const fireworksCanvas = document.getElementById('fireworksCanvas');
-const context = fireworksCanvas.getContext('2d');
-fireworksCanvas.width = window.innerWidth;
-fireworksCanvas.height = window.innerHeight;
-
-const mayoFlavors = ["Classic", "Garlic Aioli", "Olive Oil", "Mayochup", "Spicy", "Truffle"];
-const jelloFlavors = ["Lemon", "Blue Raspberry", "Pineapple", "Lime", "Strawberry", "Grape"];
-
-document.getElementById('spinButton').addEventListener('click', () => {
-    const spins1 = Math.floor(Math.random() * 360) + 1800;  
-    const spins2 = Math.floor(Math.random() * 360) + 1800;
-    const segmentAngle = 360 / mayoFlavors.length;
-
-    const chosenMayoIndex = Math.floor(((spins1 % 360) / segmentAngle));
-    const chosenJelloIndex = Math.floor(((spins2 % 360) / segmentAngle));
-
-    const chosenMayo = mayoFlavors[mayoFlavors.length - chosenMayoIndex - 1];
-    const chosenJello = jelloFlavors[jelloFlavors.length - chosenJelloIndex - 1];
-
-    wheel1.style.transform = `rotate(${spins1}deg)`;
-    wheel2.style.transform = `rotate(${spins2}deg)`;
-
-    setTimeout(() => {
-        result.innerText = `You got: ${chosenMayo} Mayo with ${chosenJello} Jello!`;
-        showFireworks();
-    }, 4000); 
-});
-
-function showFireworks() {
-    fireworksCanvas.style.display = 'block';
-
-    for (let i = 0; i < 10; i++) {
-        setTimeout(() => {
-            drawFirework(Math.random() * fireworksCanvas.width, Math.random() * fireworksCanvas.height);
-        }, i * 300);
-    }
-
-    setTimeout(() => {
-        fireworksCanvas.style.display = 'none';
-    }, 5000);
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
 }
 
-function drawFirework(x, y) {
-    const colors = ['#ffcc00', '#ff9900', '#ff6666', '#66cc66', '#66cccc', '#9999cc'];
-    const color = colors[Math.floor(Math.random() * colors.length)];
-    context.beginPath();
-    context.arc(x, y, 50, 0, 2 * Math.PI);
-    context.fillStyle = color;
-    context.fill();
+.spinner-container {
+    display: flex;
+    justify-content: space-around;
+    width: 600px;
+    margin-bottom: 20px;
+}
+
+.wheel-container {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.wheel {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 5px solid #333;
+    position: relative;
+    overflow: hidden;
+    transform: rotate(0deg);
+    transition: transform 4s cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+.segment {
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    background-color: #ffcc00;
+    border: 1px solid #333;
+    transform-origin: 100% 100%;
+    text-align: center;
+    line-height: 100px;
+    font-weight: bold;
+}
+
+.segment:nth-child(1) { transform: rotate(0deg); background-color: #ffcc00; }
+.segment:nth-child(2) { transform: rotate(60deg); background-color: #ff9900; }
+.segment:nth-child(3) { transform: rotate(120deg); background-color: #ff6666; }
+.segment:nth-child(4) { transform: rotate(180deg); background-color: #66cc66; }
+.segment:nth-child(5) { transform: rotate(240deg); background-color: #66cccc; }
+.segment:nth-child(6) { transform: rotate(300deg); background-color: #9999cc; }
+
+#spinButton {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#result {
+    margin-top: 20px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+#fireworksCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    display: none;
 }
